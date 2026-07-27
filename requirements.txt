@@ -1,0 +1,8 @@
+transformers>=4.44
+flwr[simulation]>=1.9
+pycocoevalcap
+pycocotools
+datasets>=2.20
+pillow
+tqdm
+scikit-learn
