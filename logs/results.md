@@ -140,8 +140,7 @@ see whether it flattens the decline.
 - `requirements.txt` trimmed: `pycocotools`, `datasets`, `scikit-learn`,
   `tqdm` were listed but never imported anywhere in the codebase.
 - `scripts/build_comparison_table.py` and `scripts/eval_checkpoint.py`
-  simplified to a plain zero-shot vs. federated comparison; the unused
-  `scripts/train_centralized.py` was removed.
+  simplified to a plain zero-shot vs. federated comparison.
 
 ## Outstanding
 
