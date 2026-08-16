@@ -127,5 +127,10 @@ scripts/build_comparison_table.py  Assemble the comparison markdown table
 - Non-IID client split (e.g. by COCO supercategory) is a stretch goal, not yet
   implemented — `scripts/prepare_data.py`'s `partition_iid` would need a
   supercategory-aware counterpart.
+- Centralized fine-tuning baseline (train once on the full un-partitioned
+  `train.json` for `rounds * epochs` total epochs, no FedAvg split) is a
+  natural extension, not currently implemented — would directly quantify
+  "cost of federation" against the federated result in
+  [logs/results.md](logs/results.md), skipped here to save GPU time.
 - `/workspace` on the current vast.ai instance is not a persistent volume —
   sync checkpoints/code out periodically (git push, HF Hub, rclone).
