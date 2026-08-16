@@ -59,7 +59,7 @@ Scaled-down target:
 - BLIP: BLEU-4, CIDEr (optionally METEOR/ROUGE-L if free from pycocoevalcap)
 - CLIP: R@1/5/10 for i2t and t2i separately
 - Report metrics per communication round, not just final (convergence chart)
-- Three-row comparison table per model: (1) zero-shot pretrained baseline, (2) centralized fine-tuning (same data/epochs, no FL split) — shows "cost of federation," (3) federated result — the actual deliverable
+- Comparison table per model: (1) zero-shot pretrained baseline, (2) federated result — the actual deliverable
 - Cite data-loading/eval provenance in README (e.g. "adapted from ID_VL_Pruning / BLIP official repo")
 
 ## Open items / things to double check with assigner if possible

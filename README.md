@@ -82,17 +82,12 @@ python scripts/run_fl_simulation.py --model clip --rounds 8 --epochs 2 --batch-s
 - On a single GPU, Ray schedules the 4 simulated clients sequentially each round
   (`num_gpus: 1.0` per client in the backend config).
 
-### 3. Baselines, for the 3-row comparison table
+### 3. Baselines, for the comparison table
 
 ```bash
 # zero-shot (pretrained, no fine-tuning)
 python scripts/eval_checkpoint.py --model blip --checkpoint none --split test \
     --out logs/blip_zeroshot_test.json
-
-# centralized fine-tune (same total epochs as the FL run: rounds * epochs)
-python scripts/train_centralized.py --model blip --rounds 8 --epochs 2
-python scripts/eval_checkpoint.py --model blip --checkpoint checkpoints/blip/centralized.pt --split test \
-    --out logs/blip_centralized_test.json
 
 # federated result (last FL round's checkpoint)
 python scripts/eval_checkpoint.py --model blip --checkpoint checkpoints/blip/round8.pt --split test \
@@ -106,7 +101,6 @@ Repeat with `--model clip` for the CLIP retrieval table.
 ```bash
 python scripts/build_comparison_table.py --model blip \
     --zero-shot logs/blip_zeroshot_test.json \
-    --centralized logs/blip_centralized_test.json \
     --federated logs/blip_federated_test.json \
     --out logs/blip_comparison_table.md
 ```
@@ -121,9 +115,8 @@ fl/client.py               Flower NumPyClient (model-agnostic, delegates to mode
 fl/server.py               FedAvg strategy + centralized per-round evaluation
 scripts/prepare_data.py    Karpathy split download + IID client partitioning
 scripts/run_fl_simulation.py   FL simulation entry point
-scripts/train_centralized.py   Centralized fine-tuning baseline
 scripts/eval_checkpoint.py     Eval a checkpoint (or zero-shot) on val/test
-scripts/build_comparison_table.py  Assemble the 3-row markdown table
+scripts/build_comparison_table.py  Assemble the comparison markdown table
 ```
 
 ## Notes / open items

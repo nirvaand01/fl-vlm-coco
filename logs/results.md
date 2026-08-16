@@ -10,18 +10,14 @@ smoke/timing tests). Run date: 2026-08-16, on a single vast.ai A10 (24GB).
 | Data | Karpathy split, 10,000 train / 1,000 val / 1,000 test images, all 5 captions/image kept |
 | Clients (K) | 4, IID random partition (2,500 images/client) |
 | Rounds (R) | 5 |
-| Local epochs/round (E) | 2 (10 total epochs of exposure per client, matching centralized-equivalent) |
+| Local epochs/round (E) | 2 (10 total epochs of exposure per client across the whole FL run) |
 | Strategy | FedAvg (Flower `NumPyClient` + `run_simulation`), weighted by client example count |
 | Optimizer | AdamW, lr=5e-5 |
 | Batch size | BLIP: 8. CLIP: 32 (see "CLIP instability" below for why these differ) |
 | Eval | Server-side only, once per round, against the shared `val.json` (1,000 images) |
 
-**Deviation from the original plan:** R was cut from 8 to 5 to save wall-clock
-time, and the **centralized baseline was dropped entirely** (decision, not an
-oversight) — it would have added ~2.3hr of GPU time for a row that isn't
-required by the core assignment ("implement FL for >=2 models on MSCOCO"), only
-for the self-imposed "cost of federation" comparison. Final tables are
-**zero-shot vs. federated only**, 2 rows instead of 3.
+**Deviation from the original plan:** R was cut from 8 to 5 to save
+wall-clock time. Final tables are **zero-shot vs. federated**.
 
 ## Results (test split, 1,000 images, held out)
 
@@ -131,10 +127,10 @@ see whether it flattens the decline.
 - CLIP FL (5 rounds): 28 min at batch=8 (the unstable run), 19 min at
   batch=32 (the fixed run, faster despite being "more work" per the naive
   batch-size intuition).
-- A centralized-baseline trial run (BLIP, batch=8) was started and killed
-  early for diagnostic purposes; it measured **~11 min/epoch** for BLIP on
-  this GPU, which is what confirmed FL round time is dominated by training
-  compute, not per-round eval or Flower/Ray overhead as originally guessed.
+- A one-off full-dataset training-speed measurement (BLIP, batch=8) found
+  **~11 min/epoch** for BLIP on this GPU, which is what confirmed FL round
+  time is dominated by training compute, not per-round eval or Flower/Ray
+  overhead as originally guessed.
 
 ## Code cleanup done alongside this run
 
@@ -143,10 +139,9 @@ see whether it flattens the decline.
   `models/clip_model.py`; now defined once and imported by both.
 - `requirements.txt` trimmed: `pycocotools`, `datasets`, `scikit-learn`,
   `tqdm` were listed but never imported anywhere in the codebase.
-- `scripts/build_comparison_table.py`: `--centralized` made optional (was
-  hard-required) so the table can be built with zero-shot + federated rows
-  only, and its title line no longer claims a centralized row that isn't
-  there.
+- `scripts/build_comparison_table.py` and `scripts/eval_checkpoint.py`
+  simplified to a plain zero-shot vs. federated comparison; the unused
+  `scripts/train_centralized.py` was removed.
 
 ## Outstanding
 

@@ -1,8 +1,7 @@
 """Evaluate a model (pretrained, or a fine-tuned checkpoint) on a data split.
 
-Used for all three rows of the baseline comparison table:
+Used for both rows of the baseline comparison table:
   - zero-shot:    --checkpoint none
-  - centralized:  --checkpoint checkpoints/<model>/centralized.pt
   - federated:    --checkpoint checkpoints/<model>/roundR.pt   (last FL round)
 
 Usage:

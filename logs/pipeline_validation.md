@@ -48,10 +48,8 @@ CIDEr comfortably above 1.0.
 
 - BLIP: ~21 min/round x 8 rounds ~= **2.8 hours**
 - CLIP: ~6 min/round x 8 rounds ~= **50 min**
-- Centralized baselines (same total epoch count = rounds x epochs, no FedAvg overhead):
-  BLIP ~= +20 min, CLIP ~= +6 min
 - Zero-shot baselines: a few minutes each
-- **All-in estimate: ~3.5-4 hours, dominated by BLIP's per-round eval** (autoregressive
+- **All-in estimate: ~3-3.5 hours, dominated by BLIP's per-round eval** (autoregressive
   caption generation over 1,000 val images every round is the slow part; CLIP's eval is
   just embedding lookups).
 

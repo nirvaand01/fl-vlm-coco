@@ -1,10 +1,9 @@
-"""Assemble the 3-row baseline comparison table (zero-shot / centralized / federated)
-from the JSON files eval_checkpoint.py writes.
+"""Assemble the zero-shot vs. federated comparison table from the JSON files
+eval_checkpoint.py writes.
 
 Usage:
     python scripts/build_comparison_table.py --model blip \
         --zero-shot logs/blip_zeroshot_test.json \
-        --centralized logs/blip_centralized_test.json \
         --federated logs/blip_round8_test.json
 """
 import argparse
@@ -26,21 +25,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", choices=["blip", "clip"], required=True)
     ap.add_argument("--zero-shot", required=True)
-    ap.add_argument("--centralized", default=None, help="omit to skip the centralized row")
     ap.add_argument("--federated", required=True)
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
     rows = {
         "Zero-shot (pretrained)": flatten(json.load(open(args.zero_shot))["metrics"]),
+        "Federated (FedAvg)": flatten(json.load(open(args.federated))["metrics"]),
     }
-    if args.centralized:
-        rows["Centralized fine-tune"] = flatten(json.load(open(args.centralized))["metrics"])
-    rows["Federated (FedAvg)"] = flatten(json.load(open(args.federated))["metrics"])
     columns = list(next(iter(rows.values())).keys())
 
-    title_parts = ["zero-shot"] + (["centralized"] if args.centralized else []) + ["federated"]
-    lines = [f"### {args.model.upper()} — " + " vs. ".join(title_parts), ""]
+    lines = [f"### {args.model.upper()} — zero-shot vs. federated", ""]
     lines.append("| Setting | " + " | ".join(columns) + " |")
     lines.append("|---" * (len(columns) + 1) + "|")
     for name, metrics in rows.items():
