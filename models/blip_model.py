@@ -5,8 +5,6 @@ Eval metrics (BLEU-4, CIDEr) computed via pycocoevalcap, same tooling
 salesforce/BLIP's train_caption.py uses -- our eval loop is written fresh
 against the model's generate() API rather than borrowing BLIP's training loop.
 """
-from pathlib import Path
-
 import torch
 from torch.utils.data import DataLoader
 from transformers import BlipForConditionalGeneration, BlipProcessor
@@ -16,6 +14,7 @@ from pycocoevalcap.cider.cider import Cider
 from pycocoevalcap.tokenizer.ptbtokenizer import PTBTokenizer
 
 from data.dataset import CaptionEvalDataset, CaptionTrainDataset
+from models.common import get_parameters, set_parameters, save_checkpoint  # noqa: F401
 
 MODEL_ID = "Salesforce/blip-image-captioning-base"
 
@@ -88,18 +87,3 @@ def evaluate(model, processor, items: list, device: str, batch_size: int = 16, m
         "bleu4": bleu_scores[3],
         "cider": cider_score,
     }
-
-
-def get_parameters(model) -> list:
-    return [v.cpu().numpy() for v in model.state_dict().values()]
-
-
-def set_parameters(model, parameters: list) -> None:
-    keys = list(model.state_dict().keys())
-    state_dict = {k: torch.tensor(v) for k, v in zip(keys, parameters)}
-    model.load_state_dict(state_dict, strict=True)
-
-
-def save_checkpoint(model, path: str) -> None:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    torch.save(model.state_dict(), path)

@@ -8,6 +8,9 @@ split of MSCOCO, using [Flower](https://flower.ai) for FL simulation:
 
 See [CLAUDE.md](CLAUDE.md) for the full task spec, model/dataset decisions, and reasoning.
 
+**Results from the completed R=5/E=2 run, including the CLIP instability found
+and fixed along the way, are in [logs/results.md](logs/results.md).**
+
 ## Provenance
 
 - Data-loading conventions (Karpathy split, random-caption-per-epoch training

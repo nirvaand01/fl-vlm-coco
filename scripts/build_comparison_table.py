@@ -26,19 +26,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", choices=["blip", "clip"], required=True)
     ap.add_argument("--zero-shot", required=True)
-    ap.add_argument("--centralized", required=True)
+    ap.add_argument("--centralized", default=None, help="omit to skip the centralized row")
     ap.add_argument("--federated", required=True)
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
     rows = {
         "Zero-shot (pretrained)": flatten(json.load(open(args.zero_shot))["metrics"]),
-        "Centralized fine-tune": flatten(json.load(open(args.centralized))["metrics"]),
-        "Federated (FedAvg)": flatten(json.load(open(args.federated))["metrics"]),
     }
+    if args.centralized:
+        rows["Centralized fine-tune"] = flatten(json.load(open(args.centralized))["metrics"])
+    rows["Federated (FedAvg)"] = flatten(json.load(open(args.federated))["metrics"])
     columns = list(next(iter(rows.values())).keys())
 
-    lines = [f"### {args.model.upper()} — zero-shot vs. centralized vs. federated", ""]
+    title_parts = ["zero-shot"] + (["centralized"] if args.centralized else []) + ["federated"]
+    lines = [f"### {args.model.upper()} — " + " vs. ".join(title_parts), ""]
     lines.append("| Setting | " + " | ".join(columns) + " |")
     lines.append("|---" * (len(columns) + 1) + "|")
     for name, metrics in rows.items():

@@ -8,8 +8,6 @@ Eval (R@1/5/10, i2t and t2i): standard COCO retrieval protocol -- N images vs
 5N captions with an img2txt/txt2img ground-truth mapping, same convention BLIP's
 train_retrieval.py uses, reimplemented here directly against CLIP's embeddings.
 """
-from pathlib import Path
-
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -17,6 +15,7 @@ from torch.utils.data import DataLoader
 from transformers import CLIPModel, CLIPProcessor
 
 from data.dataset import RetrievalEvalDataset, RetrievalTrainDataset
+from models.common import get_parameters, set_parameters, save_checkpoint  # noqa: F401
 
 MODEL_ID = "openai/clip-vit-base-patch32"
 
@@ -104,18 +103,3 @@ def evaluate(model, processor, items: list, device: str, batch_size: int = 32) -
     i2t = recall_at_k(sim_i2t, dataset.img2txt)
     t2i = recall_at_k(sim_t2i, dataset.txt2img)
     return {"i2t": i2t, "t2i": t2i}
-
-
-def get_parameters(model) -> list:
-    return [v.cpu().numpy() for v in model.state_dict().values()]
-
-
-def set_parameters(model, parameters: list) -> None:
-    keys = list(model.state_dict().keys())
-    state_dict = {k: torch.tensor(v) for k, v in zip(keys, parameters)}
-    model.load_state_dict(state_dict, strict=True)
-
-
-def save_checkpoint(model, path: str) -> None:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    torch.save(model.state_dict(), path)

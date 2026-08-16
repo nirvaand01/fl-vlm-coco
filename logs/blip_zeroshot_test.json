@@ -1,0 +1,9 @@
+{
+  "model": "blip",
+  "checkpoint": "zero-shot (pretrained)",
+  "split": "test",
+  "metrics": {
+    "bleu4": 0.2988110280125154,
+    "cider": 0.9928223299747883
+  }
+}

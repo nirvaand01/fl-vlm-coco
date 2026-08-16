@@ -1,0 +1,9 @@
+{
+  "model": "blip",
+  "checkpoint": "checkpoints/blip/round5.pt",
+  "split": "test",
+  "metrics": {
+    "bleu4": 0.3433423386070254,
+    "cider": 1.1899325214631626
+  }
+}
