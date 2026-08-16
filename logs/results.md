@@ -17,7 +17,7 @@ smoke/timing tests). Run date: 2026-08-16, on a single vast.ai A10 (24GB).
 | Eval | Server-side only, once per round, against the shared `val.json` (1,000 images) |
 
 **Deviation from the original plan:** R was cut from 8 to 5 to save
-wall-clock time. Final tables are **zero-shot vs. federated**.
+time and GPU compute. Final tables are **zero-shot vs. federated**.
 
 ## Results (test split, 1,000 images, held out)
 
